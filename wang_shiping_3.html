@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <style>
+            body{
+                font-family:verdana;
+            }
+            h1{
+                color:white;
+                background-color:black;
+                font-weight:900
+            }
+            
+           h2{
+                font-weight:900;
+                color:black;
+            }
+        </style>
+
+    </head>
+    <body>
+        <h1>Gapiminder-Wealth and Health of Nations</h1>
+    
+        <h2>Countries</h2>
+        
+        <svg id="svg" width="1200" height="6000">
+            <text> </text> 
+            
+            
+            <g transform="translate(200,0)">
+            <rect width="800" height="400" fill="none" 
+                  stroke="black"
+                  stroke-width="0"></rect>
+               
+            <g id="dotGroup"></g>
+            </g>
+        </svg>
+        
+       
+    </body>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script>
+        
+     
+        var data = [];
+        d3.json("https://raw.githubusercontent.com/CristianFelix/infoviz/master/Week%203/newData.json", function(error, result){
+            var data1 = result.filter(function(d) { return d.income[2008] != undefined });
+            var data2 = data1.filter(function(d) { return d.lifeExpectancy[2008] != undefined });
+            data = data2.filter(function(d) { return d.population[2008] != undefined });
+
+            render(data);
+            
+        })
+        
+        
+        var viz = d3.select("#dotGroup");
+        var width = 600,
+            height = 400,
+            margin = { top: 30, left: 20, right: 20, bottom: 20},
+            innerWidth = width - margin.left - margin.right,
+            innerHeight = height - margin.top - margin.bottom;
+        
+        var xScale = d3.scale.linear()
+            .range([0, innerWidth]),
+            yScale = d3.scale.linear()
+            .range([innerHeight, 0]),
+            sizeScale = d3.scale.linear()
+            .range([5, 15])
+            
+           
+        
+        var colorScale = d3.scale.category10();
+        
+        
+        viz.attr("transform", 
+                 "translate(" + margin.left + "," + margin.top + ")")
+        
+        function render(data) {
+            var dataPoints = viz.selectAll("circle").data(data);
+            
+            xScale.domain(d3.extent(data, function(d) { return d.income[2008]}));
+            yScale.domain(d3.extent(data, function(d) { return d.lifeExpectancy[2008]}));
+            sizeScale.domain(d3.extent(data, function(d) { return d.population[2008]}));
+          
+            
+            
+            dataPoints.enter()
+                .append("circle")
+                .attr("r", 
+                     function(d, i) { return sizeScale(d.population[2008]) })
+                .attr("cx", 
+                      function(d, i) { return xScale(d.income[2008]) })
+                .attr("cy", 
+                      function(d, i) { return yScale(d.lifeExpectancy[2008]) })
+                .attr("fill", function(d, i) { return colorScale(d.region)})
+                .attr("opacity", 0.8)
+            
+            d3.select("text").selectAll("tspan")  //use tspan for next line!
+            /* or we could use to put them together
+            <style>
+            div
+            {
+            width:350px;
+            float:left;
+            padding:10px;
+            }
+            */
+            .data(data)
+            .enter()
+            .append("tspan")
+            .attr("x",0)
+            .attr("text-anchor", "start")
+            .attr("font-size","15")
+            .attr("font-family","verdana")
+    
+            .attr("y", function(d,i) {return (20+i*22) })
+            .text(function(d) { return d.name})
+          
+            
+        }
+    </script>
+    
+</html>
+
+
+
+
+
+
+
+
+
+
