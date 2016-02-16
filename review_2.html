@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <title></title>
+    <style>
+        
+    </style>
+    
+    </head>
+<body>
+    <h1>Gapiminder</h1>
+    <h2>Countries</h2>
+    <label>title</label><input type="text" id="inputText"><button onclick="clickFunction();">add</button>  //know how to write following the rule
+    <ul id="log">
+        <li>USA</li>
+        <li>Mexican</li>
+        
+    
+    </ul>
+    
+    
+    
+    </body>
+    
+    <script src="http://d3js.org/d3.v3.min.js" ></script>
+    
+    <script>
+    function clickFunction()   //function need to be declared
+    {
+        var input=document.getElementById("inputText").value;  //know the process of add new element
+        var log=document.getElementById("log");
+        var newTitle=document.createElement("li");
+        newTitle.innerHTML=input;
+        log.appendChild(newTitle);
+    }
+        var data=[];
+        
+    d3.json( "https://raw.githubusercontent.com/CristianFelix/infoviz/master/gapminder.json", 
+            function(error,result) { data=result;
+                                    render();
+    })
+    
+           
+        
+   function render()
+   {
+    d3.select("ul").selectAll("li")
+    .data(data)
+    .enter()
+    .append("li")
+    .text( function(d) { return d.name;});
+   }
+        
+    </script>>
+
+
+
+
+
+
+
+
+
+
+</html>
